@@ -1,0 +1,12 @@
+services:
+  frontend:
+    command: npm start
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    tty: true
+
+  backend:
+    command: node server.js
+    environment:
+      - NODE_ENV=development

@@ -1,0 +1,9 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.prod
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "80:5000"
