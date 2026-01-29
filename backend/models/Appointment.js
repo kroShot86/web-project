@@ -37,6 +37,13 @@ const AppointmentSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  doctorNotes: {
+    type: String,
+    maxlength: [1000, 'Комментарий врача не должен превышать 1000 символов']
+  },
+  doctorActionAt: {
+    type: Date
   }
 });
 

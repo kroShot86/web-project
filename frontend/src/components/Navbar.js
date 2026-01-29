@@ -27,6 +27,12 @@ const Navbar = () => {
                 <Nav.Link as={Link} to="/dashboard">Панель управления</Nav.Link>
                 <Nav.Link as={Link} to="/create-appointment">Записаться</Nav.Link>
                 <Nav.Link as={Link} to="/my-appointments">Мои записи</Nav.Link>
+                {user?.role === 'admin' && (
+                  <>
+                    <Nav.Link as={Link} to="/admin">Админ-панель</Nav.Link>
+                    <Nav.Link as={Link} to="/admin/users">Пользователи</Nav.Link>
+                  </>
+                )}
               </>
             )}
           </Nav>

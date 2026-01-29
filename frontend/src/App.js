@@ -11,6 +11,8 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import CreateAppointment from './pages/CreateAppointment';
 import MyAppointments from './pages/MyAppointments';
+import AdminPanel from './pages/AdminPanel';
+import AdminUsers from './pages/AdminUsers';
 
 function App() {
   return (
@@ -37,6 +39,16 @@ function App() {
                 <PrivateRoute>
                   <MyAppointments />
                 </PrivateRoute>
+              } />
+              <Route path="/admin" element={
+                  <PrivateRoute>
+                    <AdminPanel />
+                  </PrivateRoute>
+              } />
+                <Route path="/admin/users" element={
+                  <PrivateRoute>
+                    <AdminUsers />
+                  </PrivateRoute>
               } />
             </Routes>
           </Container>

@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  // Устанавливаем заголовок авторизации
   if (token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   }

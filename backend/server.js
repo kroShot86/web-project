@@ -3,15 +3,14 @@ const cors = require('cors');
 const path = require('path');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const admin = require('./routes/admin');
 
-// Route files
 const auth = require('./routes/auth');
 const appointments = require('./routes/appointments');
 
 const app = express();
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Connect to MongoDB
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/appointment_db', {
@@ -34,6 +33,7 @@ app.use(express.json());
 // Mount routers
 app.use('/api/auth', auth);
 app.use('/api/appointments', appointments);
+app.use('/api/admin', admin);
 
 // В production отдаем статику фронтенда
 if (isProduction) {
