@@ -1,33 +1,55 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const app = express();
+const mongoose = require('mongoose');
+require('dotenv').config();
 
+// Route files
+const auth = require('./routes/auth');
+const appointments = require('./routes/appointments');
+
+const app = express();
 const isProduction = process.env.NODE_ENV === 'production';
+
+// Connect to MongoDB
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/appointment_db', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exit(1);
+  }
+};
+
+connectDB();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
+// Mount routers
+app.use('/api/auth', auth);
+app.use('/api/appointments', appointments);
+
 // В production отдаем статику фронтенда
 if (isProduction) {
   console.log('Production mode: serving frontend static files');
 
-  // Путь к собранному фронтенду
   const frontendPath = path.join(__dirname, 'public');
-
-  // Проверяем, существует ли папка с фронтендом
   const fs = require('fs');
+
   if (fs.existsSync(frontendPath)) {
     console.log('Frontend build found at:', frontendPath);
 
-    // Отдаем статические файлы фронтенда
     app.use(express.static(frontendPath));
 
-    // Для SPA - все GET запросы (кроме API) перенаправляем на index.html
     app.get('*', (req, res, next) => {
       if (req.path.startsWith('/api/')) {
-        return next(); // Пропускаем API маршруты
+        return next();
       }
       res.sendFile(path.join(frontendPath, 'index.html'));
     });
@@ -35,49 +57,30 @@ if (isProduction) {
     console.warn('WARNING: Frontend build not found at', frontendPath);
     app.get('/', (req, res) => {
       res.json({
-        message: 'Backend running in production mode',
-        warning: 'Frontend build not found',
-        api: 'Use /api/* endpoints'
+        message: 'API Server for Appointment System',
+        mode: 'production',
+        endpoints: ['/api/auth/*', '/api/appointments/*']
       });
     });
   }
-}
-
-// API Routes (работают в обоих режимах)
-app.get('/api/hello', (req, res) => {
-  res.json({
-    message: 'Hello from Express API!',
-    timestamp: new Date().toISOString(),
-    mode: isProduction ? 'production' : 'development',
-    path: '/backend/public'
-  });
-});
-
-app.get('/api/data', (req, res) => {
-  res.json({
-    items: [
-      { id: 1, name: 'Item 1', value: 'Value 1' },
-      { id: 2, name: 'Item 2', value: 'Value 2' },
-      { id: 3, name: 'Item 3', value: 'Value 3' }
-    ]
-  });
-});
-
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    mode: isProduction ? 'production' : 'development'
-  });
-});
-
-// Development mode root route
-if (!isProduction) {
+} else {
+  // Development mode
   app.get('/', (req, res) => {
     res.json({
-      message: 'Backend API is running in development mode',
-      instructions: 'Frontend runs separately on port 3000',
-      api: 'Use /api/* endpoints'
+      message: 'Appointment System API',
+      mode: 'development',
+      endpoints: {
+        auth: {
+          register: 'POST /api/auth/register',
+          login: 'POST /api/auth/login',
+          getMe: 'GET /api/auth/me'
+        },
+        appointments: {
+          create: 'POST /api/appointments',
+          getMy: 'GET /api/appointments/my',
+          getAvailableTimes: 'GET /api/appointments/available-times'
+        }
+      }
     });
   });
 }

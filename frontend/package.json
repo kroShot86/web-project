@@ -3,9 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "axios": "^1.13.4",
+    "bootstrap": "^5.3.8",
+    "date-fns": "^2.30.0",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.10.10",
+    "react-datepicker": "^4.25.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1"
+    "react-router-dom": "^6.30.3",
+    "react-scripts": "5.0.1",
+    "react-toastify": "^9.1.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -15,10 +22,20 @@
   },
   "proxy": "http://backend:5000",
   "eslintConfig": {
-    "extends": ["react-app"]
+    "extends": [
+      "react-app"
+    ]
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
-    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
