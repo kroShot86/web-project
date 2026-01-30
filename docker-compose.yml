@@ -22,8 +22,10 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV:-development}
       - MONGODB_URI=mongodb://mongodb:27017/appointment_db
-      - JWT_SECRET=development_secret_key
-      - JWT_EXPIRE=7d
+      - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET:-development_access_secret}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-development_refresh_secret}
+      - JWT_ACCESS_EXPIRE=15m
+      - JWT_REFRESH_EXPIRE=7d
     volumes:
       - ./backend:/app
       - /app/node_modules

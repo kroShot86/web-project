@@ -16,16 +16,25 @@ exports.protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
     req.user = await User.findById(decoded.id);
     next();
   } catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({
+        success: false,
+        message: 'Токен истёк',
+        expired: true
+      });
+    }
+
     return res.status(401).json({
       success: false,
       message: 'Не авторизован'
     });
   }
 };
+
 
 exports.authorize = (...roles) => {
   return (req, res, next) => {

@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   backend:
     build:
@@ -5,13 +7,19 @@ services:
       dockerfile: backend/Dockerfile.prod
     environment:
       - NODE_ENV=production
+      - PORT=5000
       - MONGODB_URI=mongodb://mongodb:27017/appointment_db
-      - JWT_SECRET=your_production_secret_key_change_this
-      - JWT_EXPIRE=7d
+      - JWT_ACCESS_SECRET=production_access_secret_key_change_this_123
+      - JWT_REFRESH_SECRET=production_refresh_secret_key_change_this_456
+      - JWT_ACCESS_EXPIRE=15m
+      - JWT_REFRESH_EXPIRE=7d
+
+      - CORS_ORIGIN=*
     ports:
       - "80:5000"
     depends_on:
       - mongodb
+    restart: unless-stopped
 
   mongodb:
     image: mongo:6
@@ -19,6 +27,7 @@ services:
       - mongodb_data:/data/db
     environment:
       - MONGO_INITDB_DATABASE=appointment_db
+    restart: unless-stopped
 
 volumes:
   mongodb_data:
